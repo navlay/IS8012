@@ -1,0 +1,130 @@
+﻿@page
+@model IndexModel
+@{ ViewData["Title"] = "Home page"; }
+
+
+
+
+<h1>Homes365</h1>
+<ul id="list">
+</ul>
+<div>
+    <hr />
+    <form id="createHousingForm" class="form">
+        <h4>Add new housing</h4>
+        <div class="form-group">
+            <label for="housingDetails">HousingDetails</label>
+            <input type="text" class="form-control" id="housingDetails" placeholder="HousingDetails" />
+        </div>
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" class="form-control" id="price" placeholder=" Price" />
+        </div>
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" class="form-control" id="date" placeholder="Date" />
+        </div>
+        <div class="form-group">
+            <label for="availability">Availability</label>
+            <input type="checkbox" class="form-control" id="availability" placeholder="Availability" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+
+
+@section Scripts {
+    <script>
+
+
+
+        $(function () {
+
+
+
+            $.ajax({
+                url: "/api/housings",
+                dataType: "json",
+                contentType: 'application/json',
+                method: 'GET'
+            }).done(function (responseJSON, status, xhr) {
+                $.each(responseJSON, function (idx, housing) {
+                    $("#list").append("<li>" + housing.housingDetails + ' - <strong>' + housing.price + '</strong> <button class="btn btn-danger btn-sm housing-delete" housing-id="' + housing.id + '">Delete</button><button class="btn btn-primary btn-sm housing-availability" id-housing="' + housing.id + '">Change Status</button></li>');
+                });
+
+
+
+
+                $("#list").on("click", ".housing-delete", function () {
+
+
+
+                    var id = $(this).attr("housing-id");
+                    var btn = this;
+                    $.ajax({
+                        url: "/api/housings/" + id,
+                        dataType: "json",
+                        contentType: "application/json",
+                        method: 'DELETE',
+                    }).done(function () {
+                        $(btn).parents("li:first").remove();
+                    }).fail(function () {
+                        alert("There was an error deleting your Housing");
+                    });
+
+
+
+                });
+                $("#list").on("click", ".housing-availability", function () {
+
+
+
+                    var id = $(this).attr("id-housing");
+                    var btn = this;
+                    $.ajax({
+                        url: "/api/housings/" + id,
+                        dataType: "json",
+                        contentType: "application/json",
+                        method: 'PUT',
+                    }).done(function () {
+                        //$(btn).parents("li:first").remove();
+                    }).fail(function () {
+                        alert("There was an error updating your housing");
+                    });
+
+                });
+
+
+                $("#createHousingForm").submit(function () {
+                    var requestData = {
+                        housingDetails: $("#housingDetails").val(),
+                        
+                    };
+                    $.ajax({
+                        url: '/api/housings',
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        method: 'POST',
+                        data: JSON.stringify(requestData)
+                    }).done(function () {
+                        $("#housingDetails").val("");
+
+
+                    }).fail(function () {
+                        alert("There was an error saving your housing");
+                    });
+                });
+
+
+
+
+            }).fail(function (xhr, status, error) {
+                alert("There was an error retrieving the data");
+            });
+
+
+
+        });
+    </script>
+}

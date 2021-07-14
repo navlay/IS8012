@@ -1,0 +1,50 @@
+﻿@page
+@model Homes365.Pages.Housings.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Housing</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Housing.Id" />
+            <div class="form-group">
+                <label asp-for="Housing.HousingDetails" class="control-label"></label>
+                <input asp-for="Housing.HousingDetails" class="form-control" />
+                <span asp-validation-for="Housing.HousingDetails" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Housing.Price" class="control-label"></label>
+                <input asp-for="Housing.Price" class="form-control" />
+                <span asp-validation-for="Housing.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Housing.Availability" /> @Html.DisplayNameFor(model => model.Housing.Availability)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Housing.Date" class="control-label"></label>
+                <input asp-for="Housing.Date" class="form-control" />
+                <span asp-validation-for="Housing.Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
